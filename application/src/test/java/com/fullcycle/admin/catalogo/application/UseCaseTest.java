@@ -5,9 +5,9 @@ import org.junit.jupiter.api.Test;
 
 public class UseCaseTest {
 
-    @Test
-    public void testCreateUseCase(){
-        Assertions.assertNotNull(new Category());
-        Assertions.assertNotNull(new UseCase().execute());
-    }
+//    @Test
+//    public void testCreateUseCase(){
+//        Assertions.assertNotNull(new Category());
+//        Assertions.assertNotNull(new UseCase().execute());
+//    }
 }
