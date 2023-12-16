@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Objects;
@@ -22,7 +21,7 @@ import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class CreateCategoryUseCaseTest {
+class CreateCategoryUseCaseTest {
 
     @InjectMocks
     private DefaultCreateCategoryUseCase useCase;
@@ -30,7 +29,7 @@ public class CreateCategoryUseCaseTest {
     private CategoryGateway categoryGateway;
 
     @Test
-    public void givenAValidCommand_whenCallsCreateCategory_shouldReturnCategoryId(){
+    void givenAValidCommand_whenCallsCreateCategory_shouldReturnCategoryId(){
 
         final var expectedName = "filmes";
         final var expectedDescription = "A categoria mais assistida";
@@ -55,13 +54,12 @@ public class CreateCategoryUseCaseTest {
                         ));
     }
     @Test
-    public void givenInvalidName_whenCallsCreateCategory_thenShouldReturnDomainException(){
+    void givenInvalidName_whenCallsCreateCategory_thenShouldReturnDomainException(){
 
         final String expectedName = null;
         final var expectedDescription = "A categoria mais assistida";
         final var expectedIsActive = true;
         final var expectedErrorMessage = "'name' should not be null";
-        final var expectedErrorCount = 1;
 
         final var aCommand = CreateCategoryCommand.with(expectedName, expectedDescription, expectedIsActive);
 
@@ -72,7 +70,7 @@ public class CreateCategoryUseCaseTest {
     }
 
     @Test
-    public void givenAValidCommandWithInactiveCategory_whenCallsCreateCategory_shouldReturnInactiveCategoryId(){
+    void givenAValidCommandWithInactiveCategory_whenCallsCreateCategory_shouldReturnInactiveCategoryId(){
 
         final var expectedName = "filmes";
         final var expectedDescription = "A categoria mais assistida";
@@ -98,7 +96,7 @@ public class CreateCategoryUseCaseTest {
     }
 
     @Test
-    public void givenAValidCommand_whenGatewayRandomException_shouldReturnAException(){
+    void givenAValidCommand_whenGatewayRandomException_shouldReturnAException(){
 
         final var expectedName = "filmes";
         final var expectedDescription = "A categoria mais assistida";
