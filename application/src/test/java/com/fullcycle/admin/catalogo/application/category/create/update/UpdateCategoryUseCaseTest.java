@@ -1,5 +1,7 @@
 package com.fullcycle.admin.catalogo.application.category.create.update;
 
+import com.fullcycle.admin.catalogo.application.category.update.DefaultUpdateCategoryUseCase;
+import com.fullcycle.admin.catalogo.application.category.update.UpdateCategoryCommand;
 import com.fullcycle.admin.catalogo.domain.category.Category;
 import com.fullcycle.admin.catalogo.domain.category.CategoryGateway;
 import org.junit.jupiter.api.Assertions;
@@ -34,7 +36,7 @@ class UpdateCategoryUseCaseTest {
         final var aCategory = Category.newCategory("film", null, true);
 
         final var expectId = aCategory.getId();
-        final var aCommand = UpdateCateCommand.with(
+        final var aCommand = UpdateCategoryCommand.with(
                 expectId.getValue(),
                 expectedName,
                 expectedDescription,
@@ -51,7 +53,7 @@ class UpdateCategoryUseCaseTest {
         final var actualOutput = useCase.execute(aCommand).get();
 
         Assertions.assertNotNull(actualOutput);
-        Assertions.assertNotNull(actualOutput.id);
+        Assertions.assertNotNull(actualOutput.id());
         verify(categoryGateway, times(1)).findById(expectId);
         verify(categoryGateway, times(1)).update(argThat(
                 aUpdateCategory ->
