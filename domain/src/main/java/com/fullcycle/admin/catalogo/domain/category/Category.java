@@ -5,7 +5,6 @@ import com.fullcycle.admin.catalogo.domain.AggregationRoot;
 import com.fullcycle.admin.catalogo.domain.validation.ValidationHandler;
 
 import java.time.Instant;
-import java.util.UUID;
 
 public class Category extends AggregationRoot<CategoryID> {
 
@@ -78,10 +77,6 @@ public class Category extends AggregationRoot<CategoryID> {
         this.description = aDescription;
         this.updatedAt = Instant.now();
         return this;
-    }
-
-    public CategoryID getId() {
-        return id;
     }
 
     public String getName() {
