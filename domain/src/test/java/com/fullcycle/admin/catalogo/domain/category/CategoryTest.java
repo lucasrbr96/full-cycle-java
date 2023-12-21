@@ -5,12 +5,13 @@ import com.fullcycle.admin.catalogo.domain.validation.handler.ThrowsValidationHa
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.time.Instant;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class CategoryTest {
+
+class CategoryTest {
 
     @Test
-    public void givenValidParams_whenCallNewCategory_thenInstantiateACategory(){
+    void givenValidParams_whenCallNewCategory_thenInstantiateACategory(){
         final var expectedName = "Filmes";
         final var expectedDescription = "A categoria mais assistida";
         final var expectedIsActive = true;
@@ -30,7 +31,7 @@ public class CategoryTest {
     }
 
     @Test
-    public void givenInvalidNullName_whenCallNewCategoryAndValidate_thenShouldReceiveError(){
+    void givenInvalidNullName_whenCallNewCategoryAndValidate_thenShouldReceiveError(){
         final String expectedName = null;
         final var expectedErrorCount = 1;
         final var expectedDescription = "A categoria mais assistida";
@@ -40,7 +41,7 @@ public class CategoryTest {
                 Category.newCategory(expectedName, expectedDescription, expectedIsActive);
 
 
-        final var actualException = Assertions.assertThrows(DomainException.class, () -> actualCategory.validate(new ThrowsValidationHandler()));
+        final var actualException = assertThrows(DomainException.class, () -> actualCategory.validate(new ThrowsValidationHandler()));
 
         Assertions.assertEquals(expectedErrorMessage, actualException.getErrors().get(0).message());
         Assertions.assertEquals(expectedErrorCount, actualException.getErrors().size());
@@ -48,7 +49,7 @@ public class CategoryTest {
     }
 
     @Test
-    public void givenInvalidEmptyName_whenCallNewCategoryAndValidate_thenShouldReceiveError(){
+    void givenInvalidEmptyName_whenCallNewCategoryAndValidate_thenShouldReceiveError(){
         final var expectedName = "  ";
         final var expectedErrorCount = 1;
         final var expectedDescription = "A categoria mais assistida";
@@ -58,7 +59,8 @@ public class CategoryTest {
                 Category.newCategory(expectedName, expectedDescription, expectedIsActive);
 
 
-        final var actualException = Assertions.assertThrows(DomainException.class, () -> actualCategory.validate(new ThrowsValidationHandler()));
+        final var actualException = assertThrows(DomainException.class,
+                () -> actualCategory.validate(new ThrowsValidationHandler()));
 
         Assertions.assertEquals(expectedErrorMessage, actualException.getErrors().get(0).message());
         Assertions.assertEquals(expectedErrorCount, actualException.getErrors().size());
@@ -66,7 +68,7 @@ public class CategoryTest {
     }
 
     @Test
-    public void givenInvalidInvalidNameLengthLessThan3_whenCallNewCategoryAndValidate_thenShouldReceiveError(){
+    void givenInvalidInvalidNameLengthLessThan3_whenCallNewCategoryAndValidate_thenShouldReceiveError(){
         final var expectedName = "Fi  ";
         final var expectedErrorCount = 1;
         final var expectedDescription = "A categoria mais assistida";
@@ -76,7 +78,7 @@ public class CategoryTest {
                 Category.newCategory(expectedName, expectedDescription, expectedIsActive);
 
 
-        final var actualException = Assertions.assertThrows(DomainException.class, () -> actualCategory.validate(new ThrowsValidationHandler()));
+        final var actualException = assertThrows(DomainException.class, () -> actualCategory.validate(new ThrowsValidationHandler()));
 
         Assertions.assertEquals(expectedErrorMessage, actualException.getErrors().get(0).message());
         Assertions.assertEquals(expectedErrorCount, actualException.getErrors().size());
@@ -84,7 +86,7 @@ public class CategoryTest {
     }
 
     @Test
-    public void givenInvalidInvalidNameLengthMoreThan255_whenCallNewCategoryAndValidate_thenShouldReceiveError(){
+    void givenInvalidInvalidNameLengthMoreThan255_whenCallNewCategoryAndValidate_thenShouldReceiveError(){
         final var expectedName =
                 """
                     Não obstante, o novo modelo estrutural aqui preconizado garante a contribuição de um grupo importante na
@@ -102,7 +104,7 @@ public class CategoryTest {
                 Category.newCategory(expectedName, expectedDescription, expectedIsActive);
 
 
-        final var actualException = Assertions.assertThrows(DomainException.class, () -> actualCategory.validate(new ThrowsValidationHandler()));
+        final var actualException = assertThrows(DomainException.class, () -> actualCategory.validate(new ThrowsValidationHandler()));
 
         Assertions.assertEquals(expectedErrorMessage, actualException.getErrors().get(0).message());
         Assertions.assertEquals(expectedErrorCount, actualException.getErrors().size());
@@ -110,7 +112,7 @@ public class CategoryTest {
     }
 
     @Test
-    public void givenAInvalidEmptyDescription_whenCallNewCategoryAndValidate_thenShouldReceiveSuccess(){
+    void givenAInvalidEmptyDescription_whenCallNewCategoryAndValidate_thenShouldReceiveSuccess(){
         final var expectedName = "Filmes";
         final var expectedDescription = "A categoria mais assistida";
         final var expectedIsActive = false;
@@ -132,7 +134,7 @@ public class CategoryTest {
     }
 
     @Test
-    public void givenAValidActiveCategory_whenCallDeactivate_thenReturnCategoryInactivated(){
+    void givenAValidActiveCategory_whenCallDeactivate_thenReturnCategoryInactivated(){
         final var expectedName = "Filmes";
         final var expectedDescription = "A categoria mais assistida";
         final var expectedIsActive = false;
@@ -149,7 +151,7 @@ public class CategoryTest {
         Assertions.assertNull(aCategory.getDeletedAt());
         Assertions.assertTrue(aCategory.isActive());
 
-        final var actualCategory = aCategory.deactivate();
+        final var actualCategory = aCategory.deactivate().clone();
 
         Assertions.assertDoesNotThrow(()->
                 actualCategory.validate(new ThrowsValidationHandler()));
@@ -166,7 +168,7 @@ public class CategoryTest {
     }
 
     @Test
-    public void givenAValidInactiveCategory_whenCallDeactivate_thenReturnCategoryActivated(){
+    void givenAValidInactiveCategory_whenCallDeactivate_thenReturnCategoryActivated(){
         final var expectedName = "Filmes";
         final var expectedDescription = "A categoria mais assistida";
         final var expectedIsActive = true;
@@ -201,7 +203,7 @@ public class CategoryTest {
     }
 
     @Test
-    public void givenAValidCategory_whenCallUpdate_thenReturnCategoryUpdated(){
+    void givenAValidCategory_whenCallUpdate_thenReturnCategoryUpdated(){
         final var expectedName = "Filmes";
         final var expectedDescription = "A categoria mais assistida";
         final var expectedIsActive = true;
@@ -216,7 +218,7 @@ public class CategoryTest {
         final var updatedAt = aCategory.getUpdatedAt();
         final var createdAt = aCategory.getCreatedAt();
 
-        final var actualCategory = aCategory.update(expectedName, expectedDescription, expectedIsActive);
+        final var actualCategory = aCategory.update(expectedName, expectedDescription, expectedIsActive).clone();
 
         Assertions.assertEquals(aCategory.getId(), actualCategory.getId());
         Assertions.assertEquals(expectedName, actualCategory.getName());
@@ -231,10 +233,9 @@ public class CategoryTest {
     }
 
     @Test
-    public void givenAValidCategory_whenCallUpdateInactive_thenReturnCategoryUpdated(){
+    void givenAValidCategory_whenCallUpdateInactive_thenReturnCategoryUpdated(){
         final var expectedName = "Filmes";
         final var expectedDescription = "A categoria mais assistida";
-        final var expectedIsActive = false;
 
 
         final var aCategory =
@@ -251,7 +252,7 @@ public class CategoryTest {
         final var createdAt = aCategory.getCreatedAt();
 
 
-        final var actualCategory = aCategory.update(expectedName, expectedDescription, false);
+        final var actualCategory = aCategory.update(expectedName, expectedDescription, false).clone();
 
         Assertions.assertEquals(aCategory.getId(), actualCategory.getId());
         Assertions.assertEquals(expectedName, actualCategory.getName());
@@ -265,7 +266,7 @@ public class CategoryTest {
     }
 
     @Test
-    public void givenAValidCategory_whenCallUpdateWithInvalidParams_thenReturnCategoryUpdated(){
+    void givenAValidCategory_whenCallUpdateWithInvalidParams_thenReturnCategoryUpdated(){
         final String expectedName = null;
         final var expectedDescription = "A categoria mais assistida";
         final var expectedIsActive = true;
@@ -285,7 +286,7 @@ public class CategoryTest {
         final var actualCategory = aCategory.update(expectedName, expectedDescription, expectedIsActive);
 
         Assertions.assertEquals(aCategory.getId(), actualCategory.getId());
-        Assertions.assertEquals(expectedName, actualCategory.getName());
+        Assertions.assertEquals(actualCategory.getName(), expectedName);
         Assertions.assertEquals(expectedDescription, actualCategory.getDescription());
         Assertions.assertEquals(createdAt, actualCategory.getCreatedAt());
         Assertions.assertTrue(aCategory.isActive());
