@@ -1,4 +1,4 @@
-package com.fullcycle.admin.catalogo.application.category.create;
+package com.fullcycle.admin.catalogo.application.category;
 
 import com.fullcycle.admin.catalogo.domain.category.Category;
 import com.fullcycle.admin.catalogo.domain.category.CategoryID;

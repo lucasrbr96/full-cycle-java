@@ -1,5 +1,6 @@
-package com.fullcycle.admin.catalogo.application.category.create.delete;
+package com.fullcycle.admin.catalogo.application.category.delete;
 
+import com.fullcycle.admin.catalogo.application.category.delete.DefaultDeleteCategoryUseCase;
 import com.fullcycle.admin.catalogo.domain.category.Category;
 import com.fullcycle.admin.catalogo.domain.category.CategoryGateway;
 import com.fullcycle.admin.catalogo.domain.category.CategoryID;
