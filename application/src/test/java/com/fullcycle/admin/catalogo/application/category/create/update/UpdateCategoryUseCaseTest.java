@@ -1,6 +1,5 @@
 package com.fullcycle.admin.catalogo.application.category.create.update;
 
-import com.fullcycle.admin.catalogo.application.category.create.CreateCategoryCommand;
 import com.fullcycle.admin.catalogo.application.category.update.DefaultUpdateCategoryUseCase;
 import com.fullcycle.admin.catalogo.application.category.update.UpdateCategoryCommand;
 import com.fullcycle.admin.catalogo.domain.category.Category;
@@ -22,7 +21,6 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
