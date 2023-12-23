@@ -1,4 +1,4 @@
-package com.fullcycle.admin.catalogo.application.category.retrieve;
+package com.fullcycle.admin.catalogo.application.category.retrieve.get;
 
 import com.fullcycle.admin.catalogo.domain.category.Category;
 import com.fullcycle.admin.catalogo.domain.category.CategoryGateway;
@@ -56,7 +56,7 @@ class GetCategoryByIdUseCaseTest {
     @Test
     void givenAInvalid_whenCallsGetCategory_shouldReturnNotFound(){
         final var expectedId = CategoryID.from("123");
-        final var expectedErrorMessage = "";
+        final var expectedErrorMessage = "Category with ID %s was not found".formatted(expectedId.getValue());
 
         Mockito.when(categoryGateway.findById(expectedId))
                 .thenReturn(Optional.empty());
@@ -71,12 +71,12 @@ class GetCategoryByIdUseCaseTest {
     }
 
     @Test
-    void givenAValid_whenGatewayThrowsException_shouldReturnException(){
+    void givenAValidId_whenGatewayThrowsException_shouldReturnException(){
         final var expectedId = CategoryID.from("123");
         final var expectedErrorMessage = "Gateway Error";
 
         Mockito.when(categoryGateway.findById(expectedId))
-                .thenReturn(Optional.empty());
+                .thenThrow(new IllegalStateException(expectedErrorMessage));
 
         final var actualException = Assertions.assertThrows(
                 IllegalStateException.class,

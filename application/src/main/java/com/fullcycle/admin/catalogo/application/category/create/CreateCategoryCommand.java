@@ -1,4 +1,4 @@
-package com.fullcycle.admin.catalogo.application.category;
+package com.fullcycle.admin.catalogo.application.category.create;
 
 public record CreateCategoryCommand(
         String name,
