@@ -6,6 +6,9 @@ build/
 
 ### IntelliJ IDEA ###
 .idea/modules.xml
+.idea/dataSources.xml
+.idea/inspectionProfiles/Project_Default.xml
+.idea/sqldialects.xml
 .idea/jarRepositories.xml
 .idea/compiler.xml
 .idea/libraries/
