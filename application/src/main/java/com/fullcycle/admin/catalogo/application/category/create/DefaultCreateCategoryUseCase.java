@@ -8,6 +8,7 @@ import io.vavr.control.Either;
 
 import java.util.Objects;
 
+
 public class DefaultCreateCategoryUseCase extends CreateCategoryUseCase{
 
     private final CategoryGateway categoryGateway;
