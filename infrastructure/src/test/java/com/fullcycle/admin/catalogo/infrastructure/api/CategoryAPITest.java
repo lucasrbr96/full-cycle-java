@@ -9,6 +9,7 @@ import com.fullcycle.admin.catalogo.application.category.retrieve.get.GetCategor
 import com.fullcycle.admin.catalogo.domain.category.Category;
 import com.fullcycle.admin.catalogo.domain.category.CategoryID;
 import com.fullcycle.admin.catalogo.domain.exceptions.DomainException;
+import com.fullcycle.admin.catalogo.domain.exceptions.NotFoundException;
 import com.fullcycle.admin.catalogo.domain.validation.Error;
 import com.fullcycle.admin.catalogo.domain.validation.handler.Notification;
 import com.fullcycle.admin.catalogo.infrastructure.category.models.CreateCategoryApiInput;
@@ -158,7 +159,9 @@ class CategoryAPITest {
         when(getCategoryByIdUseCase.execute(any()))
                 .thenReturn(CategoryOutput.from(aCategory));
 
-        MockHttpServletRequestBuilder request = get("/categories/{id}", expectedId);
+        MockHttpServletRequestBuilder request = get("/categories/{id}", expectedId)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON);
 
         final var response = this.mvc.perform(request)
                 .andDo(print());
@@ -169,18 +172,23 @@ class CategoryAPITest {
                         .andExpect(jsonPath("$.is_active", equalTo(expectedIsActive)))
                         .andExpect(jsonPath("$.created_at", equalTo(aCategory.getCreatedAt().toString())))
                         .andExpect(jsonPath("$.updated_at", equalTo(aCategory.getUpdatedAt().toString())))
-                        .andExpect(jsonPath("$.deleted_at", equalTo(aCategory.getDeletedAt().toString())));
+                        .andExpect(jsonPath("$.deleted_at", equalTo(aCategory.getDeletedAt())));
 
         verify(getCategoryByIdUseCase, times(1)).execute(eq(expectedId));
     }
 
     @Test
     void givenAInvalid_whenCallsGetCategory_shouldReturnNotFound() throws Exception{
-        final var expectedId = CategoryID.from("123");
-        final var expectedErrorMessage = "Category with ID %s was not found".formatted(expectedId.getValue());
+        final var expectedId = CategoryID.from("123").getValue();
+        final var expectedErrorMessage = "Category with ID 123 was not found";
 
 
-        MockHttpServletRequestBuilder request = get("/categories/{id}", expectedId);
+        MockHttpServletRequestBuilder request = get("/categories/{id}", expectedId)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON);;
+
+        when(getCategoryByIdUseCase.execute(any()))
+                .thenThrow(NotFoundException.with(Category.class, CategoryID.from("123")));
 
         final var response = this.mvc.perform(request)
                 .andDo(print());
