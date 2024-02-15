@@ -6,6 +6,7 @@ import com.fullcycle.admin.catalogo.domain.category.Category;
 import com.fullcycle.admin.catalogo.domain.category.CategoryGateway;
 import com.fullcycle.admin.catalogo.domain.category.CategoryID;
 import com.fullcycle.admin.catalogo.domain.exceptions.DomainException;
+import com.fullcycle.admin.catalogo.domain.exceptions.NotFoundException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -201,7 +202,6 @@ class UpdateCategoryUseCaseTest {
         final var expectedIsActive = false;
         final var expectId = "123";
         final var expectedErrorMessage = "Category with ID %s was not found".formatted(expectId);
-        final var expectedErrorCount = 1;
         final var aCommand =
                 UpdateCategoryCommand.with(
                         expectId,
@@ -217,8 +217,7 @@ class UpdateCategoryUseCaseTest {
                 assertThrows(DomainException.class, () -> useCase.execute(aCommand));
 
 
-        Assertions.assertEquals(expectedErrorMessage, actualException.getErrors().get(0).message());
-        Assertions.assertEquals(expectedErrorCount, actualException.getErrors().size());
+        Assertions.assertEquals(expectedErrorMessage, actualException.getMessage());
 
         verify(categoryGateway, times(1)).findById(CategoryID.from(expectId));
         verify(categoryGateway, times(0)).update(any());
