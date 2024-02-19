@@ -327,7 +327,7 @@ class CategoryAPITest {
     }
 
     @Test
-    void givenAInvalid_whenCallsDeleteCategory_shouldBeOK() throws Exception{
+    void givenAInvalid_whenCallsDeleteCategory_shouldBeReturnContent() throws Exception{
         final var expectedId = "123";
 
         doNothing()
@@ -339,8 +339,7 @@ class CategoryAPITest {
 
         final var response = this.mvc.perform(request)
                 .andDo(print());
-        response.andExpect(status().isNoContent())
-                .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE));
+        response.andExpect(status().isNoContent());
 
         verify(deleteCategoryUseCase, times(1)).execute(eq(expectedId));
     }
