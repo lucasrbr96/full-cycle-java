@@ -73,7 +73,7 @@ class ListCategoryUseCaseIT {
             "crianças,0,10,1,1,Kids",
             "da Amazon,0,10,1,1,Amazon Originals",
     })
-    void givenAValidTerm_whenCallsListCategories_shouldReturnCategories(
+    void givenAValidTerm_whenCallsListCategories_shouldReturnCategoriesFiltered(
             final String expectedTerms,
             final int expectedPage,
             final int expectedPerPage,
