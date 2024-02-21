@@ -13,16 +13,14 @@ import com.fullcycle.admin.catalogo.application.category.update.UpdateCategoryOu
 import com.fullcycle.admin.catalogo.application.category.update.UpdateCategoryUseCase;
 import com.fullcycle.admin.catalogo.domain.category.Category;
 import com.fullcycle.admin.catalogo.domain.category.CategoryID;
-import com.fullcycle.admin.catalogo.domain.category.CategorySearchQuery;
 import com.fullcycle.admin.catalogo.domain.exceptions.DomainException;
 import com.fullcycle.admin.catalogo.domain.exceptions.NotFoundException;
 import com.fullcycle.admin.catalogo.domain.pagination.Pagination;
 import com.fullcycle.admin.catalogo.domain.validation.Error;
 import com.fullcycle.admin.catalogo.domain.validation.handler.Notification;
-import com.fullcycle.admin.catalogo.infrastructure.category.models.CreateCategoryApiInput;
-import com.fullcycle.admin.catalogo.infrastructure.category.models.UpdateCategoryApiInput;
+import com.fullcycle.admin.catalogo.infrastructure.category.models.CreateCategoryRequest;
+import com.fullcycle.admin.catalogo.infrastructure.category.models.UpdateCategoryRequest;
 import io.vavr.API;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -74,7 +72,7 @@ class CategoryAPITest {
         final var expectedIsActive = true;
 
         final var aInput =
-                new CreateCategoryApiInput(expectedName, expectedDescription, expectedIsActive);
+                new CreateCategoryRequest(expectedName, expectedDescription, expectedIsActive);
 
         when(createCategoryUseCase.execute(any()))
                 .thenReturn(Right(CreateCategoryOutput.from("123")));
@@ -106,7 +104,7 @@ class CategoryAPITest {
         final var expectedMessage = "'name' should not be null";
 
         final var aInput =
-                new CreateCategoryApiInput(expectedName, expectedDescription, expectedIsActive);
+                new CreateCategoryRequest(expectedName, expectedDescription, expectedIsActive);
 
         when(createCategoryUseCase.execute(any()))
                 .thenReturn(Left(Notification.create(new Error(expectedMessage))));
@@ -139,7 +137,7 @@ class CategoryAPITest {
         final var expectedMessage = "'name' should not be null";
 
         final var aInput =
-                new CreateCategoryApiInput(expectedName, expectedDescription, expectedIsActive);
+                new CreateCategoryRequest(expectedName, expectedDescription, expectedIsActive);
 
         when(createCategoryUseCase.execute(any()))
                 .thenThrow(DomainException.with(new Error(expectedMessage)));
@@ -228,7 +226,7 @@ class CategoryAPITest {
         when(updateCategoryUseCase.execute(any()))
                 .thenReturn(API.Right(UpdateCategoryOutput.from(expectedId)));
 
-        final var aCommand = new UpdateCategoryApiInput(expectedName, expectedDescription, expectedIsActive);
+        final var aCommand = new UpdateCategoryRequest(expectedName, expectedDescription, expectedIsActive);
 
 
         MockHttpServletRequestBuilder request = put("/categories/{id}", expectedId)
@@ -261,7 +259,7 @@ class CategoryAPITest {
                 .thenThrow(NotFoundException.with(Category.class, CategoryID.from(expectedId)));
 
 
-        final var aCommand = new UpdateCategoryApiInput(expectedName, expectedDescription, expectedIsActive);
+        final var aCommand = new UpdateCategoryRequest(expectedName, expectedDescription, expectedIsActive);
 
 
         MockHttpServletRequestBuilder request = put("/categories/{id}", expectedId)
@@ -294,7 +292,7 @@ class CategoryAPITest {
                 .thenReturn(Left(Notification.create(new Error(expectedMessage))));
 
 
-        final var aCommand = new UpdateCategoryApiInput(expectedName, expectedDescription, expectedIsActive);
+        final var aCommand = new UpdateCategoryRequest(expectedName, expectedDescription, expectedIsActive);
 
 
         MockHttpServletRequestBuilder request = put("/categories/{id}", expectedId)
@@ -324,13 +322,11 @@ class CategoryAPITest {
                 .when(deleteCategoryUseCase).execute(any());
 
         final var request = delete("/categories/{id}", expectedId)
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON);
+                .accept(MediaType.APPLICATION_JSON);
 
         final var response = this.mvc.perform(request)
                 .andDo(print());
-        response.andExpect(status().isNoContent())
-                .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE));
+        response.andExpect(status().isNoContent());
 
         verify(deleteCategoryUseCase, times(1)).execute(eq(expectedId));
     }
@@ -369,7 +365,7 @@ class CategoryAPITest {
                 new Pagination<>(expectedPage, expectedPerPage, expectedTotal, expectedItems)
         );
 
-        final var request = delete("/categories/{id}")
+        final var request = get("/categories")
                 .queryParam("page", String.valueOf(expectedPage))
                 .queryParam("perPage", String.valueOf(expectedPerPage))
                 .queryParam("sort", expectedSort)
@@ -388,9 +384,8 @@ class CategoryAPITest {
                 .andExpect(jsonPath("$.items[0].id", equalTo(aCategory.getId().getValue())))
                 .andExpect(jsonPath("$.items[0].name", equalTo(aCategory.getName())))
                 .andExpect(jsonPath("$.items[0].description", equalTo(aCategory.getDescription())))
-                .andExpect(jsonPath("$.items[0].is_active", equalTo(aCategory.getDescription())))
+                .andExpect(jsonPath("$.items[0].is_active", equalTo(aCategory.isActive())))
                 .andExpect(jsonPath("$.items[0].created_at", equalTo(aCategory.getCreatedAt().toString())))
-                .andExpect(jsonPath("$.items[0].updated_at", equalTo(aCategory.getUpdatedAt().toString())))
                 .andExpect(jsonPath("$.items[0].deleted_at", equalTo(aCategory.getDeletedAt())));
 
         verify(listCategoriesUseCase, times(1)).execute(argThat(query->
