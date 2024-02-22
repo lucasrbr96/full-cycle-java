@@ -18,6 +18,8 @@ import com.fullcycle.admin.catalogo.domain.exceptions.NotFoundException;
 import com.fullcycle.admin.catalogo.domain.pagination.Pagination;
 import com.fullcycle.admin.catalogo.domain.validation.Error;
 import com.fullcycle.admin.catalogo.domain.validation.handler.Notification;
+import com.fullcycle.admin.catalogo.infrastructure.category.models.CreateCategoryRequest;
+import com.fullcycle.admin.catalogo.infrastructure.category.models.UpdateCategoryRequest;
 import io.vavr.API;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +34,7 @@ import java.util.Objects;
 
 import static io.vavr.API.Left;
 import static io.vavr.API.Right;
-import static org.hamcrest.Matchers.*;;
+import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -201,7 +203,7 @@ class CategoryAPITest {
 
         MockHttpServletRequestBuilder request = get("/categories/{id}", expectedId)
                 .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON);;
+                .contentType(MediaType.APPLICATION_JSON);
 
         when(getCategoryByIdUseCase.execute(any()))
                 .thenThrow(NotFoundException.with(Category.class, CategoryID.from("123")));
