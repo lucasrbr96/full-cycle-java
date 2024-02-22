@@ -18,8 +18,6 @@ import com.fullcycle.admin.catalogo.domain.exceptions.NotFoundException;
 import com.fullcycle.admin.catalogo.domain.pagination.Pagination;
 import com.fullcycle.admin.catalogo.domain.validation.Error;
 import com.fullcycle.admin.catalogo.domain.validation.handler.Notification;
-import com.fullcycle.admin.catalogo.infrastructure.category.models.CreateCategoryRequest;
-import com.fullcycle.admin.catalogo.infrastructure.category.models.UpdateCategoryRequest;
 import io.vavr.API;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
