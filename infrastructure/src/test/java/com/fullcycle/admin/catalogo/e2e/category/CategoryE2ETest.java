@@ -84,6 +84,7 @@ public class CategoryE2ETest {
         return Json.readValue(json, CategoryResponse.class);
     }
 
+
     @Test
     public void asACatalogAdminIShouldBeAbleToNavigateToPageAllCategories() throws Exception {
         Assertions.assertTrue(MY_SQL_CONTAINER.isRunning());
@@ -163,6 +164,41 @@ public class CategoryE2ETest {
                 .andExpect(jsonPath("$.items[1].name", Matchers.equalTo("Filmes")))
                 .andExpect(jsonPath("$.items[2].name", Matchers.equalTo("Séries")));
 
+    }
+
+    @Test
+    public void asCatalogAdminIShouldBeAbleToGetACategoryByItsIdentifier() throws Exception {
+        Assertions.assertTrue(MY_SQL_CONTAINER.isRunning());
+
+        Assertions.assertEquals(0, categoryRepository.count());
+        final var expectedName = "filmes";
+        final var expectedDescription = "A categoria mais assistida";
+        final var expectedIsActive = true;
+
+        final var actualId =
+                givenACategory(expectedName, expectedDescription, expectedIsActive);
+
+        final var actualCategory = categoryRepository.findById(actualId.getValue()).get();
+
+        Assertions.assertEquals(expectedName, actualCategory.getName());
+        Assertions.assertEquals(expectedDescription, actualCategory.getDescription());
+        Assertions.assertEquals(expectedIsActive, actualCategory.isActive());
+        Assertions.assertNotNull(actualCategory.getCreatedAt());
+        Assertions.assertNotNull(actualCategory.getUpdatedAt());
+        Assertions.assertNull(actualCategory.getDeletedAt());
+    }
+
+    @Test
+    public void asCatalogAdminIShouldBeAbleToATreatedErrorByGettingANotFoundCategory() throws Exception {
+        Assertions.assertTrue(MY_SQL_CONTAINER.isRunning());
+
+        Assertions.assertEquals(0, categoryRepository.count());
+
+        final var aRequest = get("/categories/123")
+                .contentType(MediaType.APPLICATION_JSON);
+        final var json = this.mvc.perform(aRequest)
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message", Matchers.equalTo("Category with ID 123 was not found")));
     }
 
 
