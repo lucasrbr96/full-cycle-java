@@ -101,7 +101,7 @@ public class Category extends AggregationRoot<CategoryID> implements Cloneable {
             final boolean isActive
     ){
         if (isActive){
-            isActive();
+            active = true;
         }else {
             deactivate();
         }
