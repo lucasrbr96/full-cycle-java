@@ -3,7 +3,9 @@ package com.fullcycle.admin.catalogo.domain.genre;
 import com.fullcycle.admin.catalogo.domain.AggregationRoot;
 import com.fullcycle.admin.catalogo.domain.category.Category;
 import com.fullcycle.admin.catalogo.domain.category.CategoryID;
+import com.fullcycle.admin.catalogo.domain.exceptions.NotificationException;
 import com.fullcycle.admin.catalogo.domain.validation.ValidationHandler;
+import com.fullcycle.admin.catalogo.domain.validation.handler.Notification;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -36,6 +38,12 @@ public class Genre extends AggregationRoot<GenreID> {
         this.updatedAt = aUpdateAt;
         this.deletedAt = aDeletedAt;
 
+        final var notification = Notification.create();
+        validate(notification);
+
+        if (notification.hasError()){
+            throw new NotificationException("Failed to create a Aggregation Genre", notification);
+        }
     }
 
     public static Genre newGenre(final String aName, final boolean isActive){
@@ -72,7 +80,7 @@ public class Genre extends AggregationRoot<GenreID> {
 
     @Override
     public void validate(final ValidationHandler handler) {
-
+        new GenreValidator(this, handler).validate();
     }
 
     public String getName() {
