@@ -4,6 +4,7 @@ import com.fullcycle.admin.catalogo.domain.AggregationRoot;
 import com.fullcycle.admin.catalogo.domain.category.Category;
 import com.fullcycle.admin.catalogo.domain.category.CategoryID;
 import com.fullcycle.admin.catalogo.domain.exceptions.NotificationException;
+import com.fullcycle.admin.catalogo.domain.utils.InstantUtils;
 import com.fullcycle.admin.catalogo.domain.validation.ValidationHandler;
 import com.fullcycle.admin.catalogo.domain.validation.handler.Notification;
 
@@ -48,7 +49,7 @@ public class Genre extends AggregationRoot<GenreID> {
 
     public static Genre newGenre(final String aName, final boolean isActive){
         final var anId = GenreID.unique();
-        final var now = Instant.now();
+        final var now = InstantUtils.now();
         final var deletedAt = isActive ? null : now;
         return new Genre(anId, aName, isActive, new ArrayList<>(), now, now, deletedAt);
     }
@@ -105,5 +106,21 @@ public class Genre extends AggregationRoot<GenreID> {
 
     public boolean isActive() {
         return active;
+    }
+
+    public Genre activate() {
+        this.deletedAt = null;
+        this.active = true;
+        this.updatedAt = InstantUtils.now();
+        return this;
+    }
+
+    public Genre deactivate() {
+        if (getDeletedAt() == null){
+            this.deletedAt = InstantUtils.now();
+        }
+        this.active = false;
+        this.updatedAt = InstantUtils.now();
+        return this;
     }
 }
