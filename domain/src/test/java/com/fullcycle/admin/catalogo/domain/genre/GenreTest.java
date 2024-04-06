@@ -84,7 +84,7 @@ public class GenreTest {
     }
 
     @Test
-    public void givenAnActiveGenre_whenCallDeactivate_shouldReceiveOk(){
+    public void givenAnDeactivateGenre_whenCallActivate_shouldReceiveOk(){
         final var expectedName = "Ação";
         final var expectedIsActive = false;
         final var expectedCategories = 0;
@@ -108,7 +108,7 @@ public class GenreTest {
     }
 
     @Test
-    public void givenAnDeactivateGenre_whenCallActivate_shouldReceiveOk(){
+    public void givenAnActiveGenre_whenCallDeactivate_shouldReceiveOk(){
         final var expectedName = "Ação";
         final var expectedIsActive = true;
         final var expectedCategories = 0;
@@ -130,7 +130,7 @@ public class GenreTest {
         Assertions.assertEquals(expectedCategories, actualGenre.getCategories().size());
         Assertions.assertEquals(actualCreateAt, actualGenre.getCreatedAt());
         Assertions.assertNotNull(actualGenre.getUpdatedAt());
-        Assertions.assertNotNull(actualGenre.getDeletedAt());
+        Assertions.assertNull(actualGenre.getDeletedAt());
     }
 
     @Test
@@ -260,7 +260,7 @@ public class GenreTest {
         final var moviesID = CategoryID.from("456");
         final var expectedCategories = List.of(seriesID, moviesID);
 
-        final var actualGenre = Genre.newGenre("acao", expectedIsActive);
+        final var actualGenre = Genre.newGenre(expectedName, expectedIsActive);
 
         Assertions.assertEquals(0, actualGenre.getCategories().size());
         final var actualCreateAt = actualGenre.getCreatedAt();
@@ -283,7 +283,7 @@ public class GenreTest {
         final var expectedIsActive = true;
         final var expectedCategories = new ArrayList<CategoryID>();
 
-        final var actualGenre = Genre.newGenre("acao", expectedIsActive);
+        final var actualGenre = Genre.newGenre(expectedName, expectedIsActive);
 
         Assertions.assertEquals(0, actualGenre.getCategories().size());
         final var actualCreateAt = actualGenre.getCreatedAt();
