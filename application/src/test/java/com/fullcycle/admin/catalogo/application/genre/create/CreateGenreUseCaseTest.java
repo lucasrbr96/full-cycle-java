@@ -38,7 +38,7 @@ public class CreateGenreUseCaseTest {
         final var expectCategories = List.<CategoryID>of();
 
         final var aCommand =
-                CreateGenreCommand.with(expectName, expectIsActive, expectCategories);
+                CreateGenreCommand.with(expectName, expectIsActive, asString(expectCategories));
 
         Mockito.when(genreGateway.create(any()))
                 .thenAnswer(returnsFirstArg());

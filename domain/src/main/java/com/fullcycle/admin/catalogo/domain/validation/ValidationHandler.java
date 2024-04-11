@@ -10,7 +10,7 @@ public interface ValidationHandler {
 
     ValidationHandler append(ValidationHandler anHandler);
 
-    ValidationHandler validate(Validation aValidation);
+    <T> T validate(Validation<T> aValidation);
 
 
     default boolean hasError(){
@@ -25,7 +25,7 @@ public interface ValidationHandler {
         }
     }
 
-    public interface Validation{
-        void validate();
+    interface Validation<T>{
+        T validate();
     }
 }
