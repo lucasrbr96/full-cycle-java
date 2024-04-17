@@ -46,7 +46,7 @@ public class UpdateGenreUseCase {
                 expectedId.getValue(),
                 expectedName,
                 expectedIdActive,
-                expectedCategories
+                asString(expectedCategories)
         );
         when(genreGateway.findById(any()))
                 .thenReturn(Optional.of(Genre.with(aGenre)));
@@ -60,7 +60,7 @@ public class UpdateGenreUseCase {
         //then
 
         Assertions.assertNotNull(actualOutput);
-        Assertions.assertEquals(expectedId, actualOutput.id);
+        Assertions.assertEquals(expectedId.getValue(), actualOutput.id());
 
         verify(genreGateway, times(1)).findById(expectedId);
         verify(genreGateway, times(1)).update(argThat(aUpdatedGenre ->
@@ -71,5 +71,9 @@ public class UpdateGenreUseCase {
                         && Objects.isNull(aUpdatedGenre.getDeletedAt())
                 ));
 
+    }
+
+    private List<String> asString(List<CategoryID> ids){
+        return ids.stream().map(CategoryID::getValue).toList();
     }
 }
