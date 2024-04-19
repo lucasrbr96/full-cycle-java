@@ -398,7 +398,7 @@ public class GenreTest {
     public void givenAValidEmptyCategoriesGenre_whenCallAddCategoriesWithNullList_shouldReceiveOk(){
         final var expectedName = "Ação";
         final var expectedIsActive = true;
-        final List<CategoryID> expectedCategories = null;
+        final List<CategoryID> expectedCategories = new ArrayList<>();
 
         final var actualGenre = Genre.newGenre(expectedName, expectedIsActive);
 
