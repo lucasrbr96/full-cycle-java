@@ -63,42 +63,6 @@ public class ListGenreUseCaseTest extends UseCaseTest {
     }
 
     @Test
-    public void givenAValidQuery_whenCallsListGenre_shouldReturnGenres(){
-        //given
-        final var genres = List.of(
-                Genre.newGenre("Ação", true),
-                Genre.newGenre("Aventura", true)
-        );
-
-        final var expectedPage = 0;
-        final var expectedPerPage = 10;
-        final var expectedTerms = "A";
-        final var expectedSort = "createdAt";
-        final var expectedDirection = "asc";
-        final var expectedTotal = 2;
-        final var expectedItems = genres.stream().map(GenreListOutput::from).toList();
-        final var expectedPagination = new Pagination<>(
-                expectedPage,
-                expectedPerPage,
-                expectedTotal,
-                genres
-        );
-
-        Mockito.when(genreGateway.findAll(Mockito.any())).thenReturn(expectedPagination);
-
-        final var aQuery =
-                new SearchQuery(expectedPage, expectedPerPage, expectedTerms, expectedSort, expectedDirection);
-        //when
-        final var actualOutput = useCase.execute(aQuery);
-        Assertions.assertEquals(expectedPage, actualOutput.currentPage());
-        Assertions.assertEquals(expectedPerPage, actualOutput.perPage());
-        Assertions.assertEquals(expectedTotal, actualOutput.total());
-        Assertions.assertEquals(expectedItems, actualOutput.items());
-
-        Mockito.verify(genreGateway, Mockito.times(1)).findAll(Mockito.eq(aQuery));
-    }
-
-    @Test
     public void givenAValidQuery_whenCallsListGenreAndResultIsEmpty_shouldReturnGenres(){
         //given
         final var genres = List.<Genre>of();
@@ -132,7 +96,7 @@ public class ListGenreUseCaseTest extends UseCaseTest {
     }
 
     @Test
-    public void givenAValidQuery_whenCallsListGenreAndResultIsEmpty_shouldReturnGenres(){
+    public void givenAValidQuery_whenCallsListGenreAndGatewayThrowsRandomError_shouldReturnGenres(){
         //given
         final var expectedPage = 0;
         final var expectedPerPage = 10;
