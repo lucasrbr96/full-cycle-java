@@ -49,13 +49,13 @@ public class GetGenreByIdUseCaseTest extends UseCaseTest {
         //when
         final var actualGenre = useCase.execute(expectedId.getValue());
 
-        Assertions.assertEquals(expectedId.getValue(), actualGenre.id);
-        Assertions.assertEquals(expectedName, actualGenre.name);
-        Assertions.assertEquals(expectedIsActive, actualGenre.isActive);
-        Assertions.assertEquals(asString(expectedCategories), actualGenre.categories);
-        Assertions.assertEquals(aGenre.getCreatedAt(), actualGenre.createdAt);
-        Assertions.assertEquals(aGenre.getUpdatedAt(), actualGenre.updatedAt);
-        Assertions.assertEquals(aGenre.getDeletedAt(), actualGenre.deletedAt);
+        Assertions.assertEquals(expectedId.getValue(), actualGenre.id());
+        Assertions.assertEquals(expectedName, actualGenre.name());
+        Assertions.assertEquals(expectedIsActive, actualGenre.isActive());
+        Assertions.assertEquals(asString(expectedCategories), actualGenre.categories());
+        Assertions.assertEquals(aGenre.getCreatedAt(), actualGenre.createdAt());
+        Assertions.assertEquals(aGenre.getUpdatedAt(), actualGenre.updatedAt());
+        Assertions.assertEquals(aGenre.getDeletedAt(), actualGenre.deletedAt());
 
         Mockito.verify(genreGateway, Mockito.times(1)).findById(expectedId);
     }
