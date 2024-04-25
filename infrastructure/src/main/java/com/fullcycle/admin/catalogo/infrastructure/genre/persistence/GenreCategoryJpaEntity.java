@@ -3,11 +3,12 @@ package com.fullcycle.admin.catalogo.infrastructure.genre.persistence;
 import com.fullcycle.admin.catalogo.domain.category.CategoryID;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
 @Table(name = "genres_categories")
-public class GenreCategoryJpaEntity {
+public class GenreCategoryJpaEntity implements Serializable {
 
     @EmbeddedId
     private GenreCategoryID id;
