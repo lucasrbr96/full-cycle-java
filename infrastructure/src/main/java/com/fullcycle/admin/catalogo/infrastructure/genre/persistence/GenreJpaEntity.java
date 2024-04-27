@@ -6,6 +6,7 @@ import com.fullcycle.admin.catalogo.domain.genre.GenreID;
 
 import javax.persistence.*;
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -46,6 +47,7 @@ public class GenreJpaEntity {
         this.id = anId;
         this.name = aName;
         this.active = isActive;
+        this.categories = new HashSet<>();
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.deletedAt = deletedAt;

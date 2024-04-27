@@ -5,8 +5,6 @@ import com.fullcycle.admin.catalogo.domain.category.Category;
 import com.fullcycle.admin.catalogo.domain.category.CategoryID;
 import com.fullcycle.admin.catalogo.domain.genre.Genre;
 import com.fullcycle.admin.catalogo.infrastructure.category.CategoryMySQLGateway;
-import com.fullcycle.admin.catalogo.infrastructure.genre.persistence.GenreCategoryJpaEntity;
-import com.fullcycle.admin.catalogo.infrastructure.genre.persistence.GenreJpaEntity;
 import com.fullcycle.admin.catalogo.infrastructure.genre.persistence.GenreRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
