@@ -8,7 +8,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "genres_categories")
-public class GenreCategoryJpaEntity implements Serializable {
+public class GenreCategoryJpaEntity{
 
     @EmbeddedId
     private GenreCategoryID id;
