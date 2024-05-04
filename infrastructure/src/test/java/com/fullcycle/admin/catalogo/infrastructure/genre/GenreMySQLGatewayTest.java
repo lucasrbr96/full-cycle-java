@@ -419,7 +419,7 @@ public class GenreMySQLGatewayTest {
             "dr,0,10,1,1,Drama",
             "com,0,10,1,1,Comédia romântica",
             "cien,0,10,1,1,Ficção científica",
-            "terr,0,10,1,1,Comédia terror"
+            "terr,0,10,1,1,Terror"
     })
     public void givenAValidTerm_whenCallsFindAll_shouldReturnFiltered(
             final String expectedTerms,
@@ -468,7 +468,7 @@ public class GenreMySQLGatewayTest {
             ){
         //given
         mockGenres();
-        final var expectedTerms = "name";
+        final var expectedTerms = "";
 
         final var aQuery =
                 new SearchQuery(expectedPage, expectedPerPage, expectedTerms, expectedSort, expectedDirection);
@@ -488,7 +488,7 @@ public class GenreMySQLGatewayTest {
     @ParameterizedTest
     @CsvSource({
             "0,2,2,5,Ação;Comédia romântica",
-            "1,2,2,5,Drama,Ficção Científica",
+            "1,2,2,5,Drama;Ficção científica",
             "2,2,1,5,Terror"
     })
     public void givenAValidSortAndDirection_whenCallsFindAll_shouldReturnFiltered(
@@ -505,7 +505,7 @@ public class GenreMySQLGatewayTest {
         final var expectedDirection = "asc";
 
         final var aQuery =
-                new SearchQuery(expectedPage, expectedPerPage, expectedDirection, expectedSort, expectedDirection);
+                new SearchQuery(expectedPage, expectedPerPage, expectedTerms, expectedSort, expectedDirection);
 
         //when
         final var actualPage = genreGateway.findAll(aQuery);
@@ -528,13 +528,11 @@ public class GenreMySQLGatewayTest {
     }
 
     private void mockGenres(){
-        genreRepository.saveAll(List.of(
-                GenreJpaEntity.from(Genre.newGenre("Comédia romântica", true)),
-                GenreJpaEntity.from(Genre.newGenre("Ação", true)),
-                GenreJpaEntity.from(Genre.newGenre("Drama", true)),
-                GenreJpaEntity.from(Genre.newGenre("Terror", true)),
-                GenreJpaEntity.from(Genre.newGenre("Ficção científica", true))
-                ));
+        genreRepository.saveAndFlush(GenreJpaEntity.from(Genre.newGenre("Comédia romântica", true)));
+        genreRepository.saveAndFlush(GenreJpaEntity.from(Genre.newGenre("Ação", true)));
+        genreRepository.saveAndFlush(GenreJpaEntity.from(Genre.newGenre("Drama", true)));
+        genreRepository.saveAndFlush(GenreJpaEntity.from(Genre.newGenre("Terror", true)));
+        genreRepository.saveAndFlush(GenreJpaEntity.from(Genre.newGenre("Ficção científica", true)));
     }
     private List<CategoryID> sorted(final List<CategoryID> expectedCategories) {
         return expectedCategories.stream()

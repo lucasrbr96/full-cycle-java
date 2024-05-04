@@ -11,9 +11,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -64,12 +62,8 @@ public class CategoryMySQLGateway implements CategoryGateway {
 
         final var specifications = Optional.ofNullable(aQuery.terms())
                 .filter(str -> !str.isBlank())
-                .map(str -> {
-                            final Specification<CategoryJpaEntity> nameLike = like("name", str);
-                            final Specification<CategoryJpaEntity> descriptionLike = like("description", str);
-                            return nameLike.or(descriptionLike);
-                        }
-                ).orElse(null);
+                .map(this::assembleSpecification)
+                .orElse(null);
         final var pageResult = this.repository.findAll(Specification.where(specifications), page);
 
         return new Pagination<>(
@@ -88,5 +82,11 @@ public class CategoryMySQLGateway implements CategoryGateway {
 
     private Category save(final Category aCategory) {
         return repository.saveAndFlush(CategoryJpaEntity.from(aCategory)).toAggregate();
+    }
+
+    private Specification<CategoryJpaEntity> assembleSpecification(final String str) {
+        final Specification<CategoryJpaEntity> nameLike = like("name", str);
+        final Specification<CategoryJpaEntity> descriptionLike = like("description", str);
+        return nameLike.or(descriptionLike);
     }
 }
