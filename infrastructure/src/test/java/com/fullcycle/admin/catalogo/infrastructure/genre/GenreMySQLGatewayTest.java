@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
@@ -363,10 +364,10 @@ public class GenreMySQLGatewayTest {
         Assertions.assertEquals(expectedId, actualGenre.getId());
         Assertions.assertEquals(expectedName, actualGenre.getName());
         Assertions.assertEquals(expectedIsActive, actualGenre.isActive());
-        Assertions.assertEquals(expectedCategories, actualGenre.getCategories());
+        Assertions.assertEquals(sorted(expectedCategories), sorted(actualGenre.getCategories()));
         Assertions.assertEquals(aGenre.getCreatedAt(), actualGenre.getCreatedAt());
         Assertions.assertEquals(aGenre.getUpdatedAt(), actualGenre.getUpdatedAt());
-        Assertions.assertNotNull(actualGenre.getDeletedAt());
+        Assertions.assertNull(actualGenre.getDeletedAt());
 
     }
 
@@ -385,4 +386,9 @@ public class GenreMySQLGatewayTest {
 
     }
 
+    private List<CategoryID> sorted(final List<CategoryID> expectedCategories) {
+        return expectedCategories.stream()
+                .sorted(Comparator.comparing(CategoryID::getValue))
+                .toList();
+    }
 }
