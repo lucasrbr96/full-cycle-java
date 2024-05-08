@@ -21,7 +21,7 @@ import java.util.Objects;
 public class GenreUseCaseConfig {
 
     private final GenreGateway genreGateway;
-    private CategoryGateway categoryGateway;
+    private final CategoryGateway categoryGateway;
 
     public GenreUseCaseConfig(final GenreGateway genreGateway, final CategoryGateway categoryGateway) {
         this.genreGateway = Objects.requireNonNull(genreGateway);

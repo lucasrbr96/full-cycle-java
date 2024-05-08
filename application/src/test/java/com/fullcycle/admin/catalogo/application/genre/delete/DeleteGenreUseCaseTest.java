@@ -7,6 +7,7 @@ import com.fullcycle.admin.catalogo.domain.genre.GenreID;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import java.util.List;
@@ -16,6 +17,7 @@ public class DeleteGenreUseCaseTest extends UseCaseTest {
     @InjectMocks
     private DefaultDeleteGenreUseCase useCase;
 
+    @Mock
     private GenreGateway genreGateway;
 
     @Override
@@ -63,8 +65,6 @@ public class DeleteGenreUseCaseTest extends UseCaseTest {
         //when
         Mockito.doThrow(new IllegalStateException("Gateway error")).when(genreGateway)
                 .deleteById(Mockito.any());
-
-        Mockito.doNothing().when(genreGateway).deleteById(Mockito.any());
 
         Assertions.assertThrows(IllegalStateException.class,
                 () -> useCase.execute(expectedId.getValue()) );
