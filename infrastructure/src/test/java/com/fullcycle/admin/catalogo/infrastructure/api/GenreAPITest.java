@@ -79,6 +79,7 @@ public class GenreAPITest {
                 ));
     }
 
+    @Test
     public void givenAInvalidName_whenCallsCreateGenre_shouldReturnNotification() throws Exception{
         //given
         final String expectedName = null;
@@ -90,7 +91,7 @@ public class GenreAPITest {
                 new CreateGenreRequest(expectedName, expectedCategories, expectedIsActive);
 
         Mockito.when(createGenreUseCase.execute(Mockito.any()))
-                .thenThrow(new NotificationException("Error", Notification.create(new Error())));
+                .thenThrow(new NotificationException("Error", Notification.create(new Error(expectedErrorMessage))));
 
         //when
         final var aRequest = MockMvcRequestBuilders.post("/genres")
@@ -160,7 +161,7 @@ public class GenreAPITest {
                 .thenThrow(NotFoundException.with(Genre.class, expectedId));
 
 
-        final var aRequest = MockMvcRequestBuilders.get("/genres/{id}", expectedId)
+        final var aRequest = MockMvcRequestBuilders.get("/genres/{id}", expectedId.getValue())
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .contentType(MediaType.APPLICATION_JSON_VALUE);
 
