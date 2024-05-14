@@ -4,7 +4,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fullcycle.admin.catalogo.ControllerTest;
 import com.fullcycle.admin.catalogo.application.genre.create.CreateGenreOutput;
 import com.fullcycle.admin.catalogo.application.genre.create.CreateGenreUseCase;
+import com.fullcycle.admin.catalogo.application.genre.retrieve.get.GenreOutput;
+import com.fullcycle.admin.catalogo.application.genre.retrieve.get.GetGenreByIdUseCase;
+import com.fullcycle.admin.catalogo.domain.category.CategoryID;
+import com.fullcycle.admin.catalogo.domain.exceptions.NotFoundException;
 import com.fullcycle.admin.catalogo.domain.exceptions.NotificationException;
+import com.fullcycle.admin.catalogo.domain.genre.Genre;
+import com.fullcycle.admin.catalogo.domain.genre.GenreID;
 import com.fullcycle.admin.catalogo.domain.validation.handler.Notification;
 import com.fullcycle.admin.catalogo.infrastructure.genre.models.CreateGenreRequest;
 import org.hamcrest.Matchers;
@@ -34,6 +40,9 @@ public class GenreAPITest {
 
     @MockBean
     private CreateGenreUseCase createGenreUseCase;
+
+    @MockBean
+    private GetGenreByIdUseCase getGenreByIdUseCase;
 
     @Test
     public void givenAValidCommand_whenCallsCreateGere_shouldReturnGenreId() throws Exception {
@@ -103,5 +112,64 @@ public class GenreAPITest {
                         && Objects.equals(expectedCategories, cmd.categories())
                         && Objects.equals(expectedIsActive, cmd.isActive())
         ));
+    }
+
+    @Test
+    public void givenAValid_whenCallsGetGenreById_shouldReturnGenre() throws Exception {
+        //given
+        final var expectedName = "Ação";
+        final var expectedCategories = List.of("123", "456");
+        final var expectedIsActive = false;
+
+        final var aGenre = Genre.newGenre(expectedName, expectedIsActive)
+                .addCategories(expectedCategories.stream().map(CategoryID::from).toList());
+
+        final var expectedId = aGenre.getId().getValue();
+
+        Mockito.when(getGenreByIdUseCase.execute(Mockito.any()))
+                .thenReturn(GenreOutput.from(aGenre));
+
+
+        final var aRequest = MockMvcRequestBuilders.get("/genres/{id}", expectedId)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .contentType(MediaType.APPLICATION_JSON_VALUE);
+
+        final var response = this.mvc.perform(aRequest);
+
+        response.andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.header().string("content-type", MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id", Matchers.equalTo(expectedId)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.name", Matchers.equalTo(expectedName)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.is_active", Matchers.equalTo(expectedIsActive)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.categories_id", Matchers.equalTo(expectedCategories)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.created_at", Matchers.equalTo(aGenre.getCreatedAt().toString())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.updated_at", Matchers.equalTo(aGenre.getUpdatedAt().toString())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.deleted_at", Matchers.equalTo(aGenre.getDeletedAt().toString())));
+
+        Mockito.verify(getGenreByIdUseCase).execute(expectedId);
+    }
+
+    @Test
+    public void givenAInValid_whenCallsGetGenreById_shouldReturnNotFound() throws Exception {
+        //given
+        final var expectedErrorMessage = "Genre with ID 123 was not found";
+        final var expectedId = GenreID.from("123");
+
+
+        Mockito.when(getGenreByIdUseCase.execute(Mockito.any()))
+                .thenThrow(NotFoundException.with(Genre.class, expectedId));
+
+
+        final var aRequest = MockMvcRequestBuilders.get("/genres/{id}", expectedId)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .contentType(MediaType.APPLICATION_JSON_VALUE);
+
+        final var response = this.mvc.perform(aRequest);
+
+        response.andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(MockMvcResultMatchers.header().string("content-type", MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message", Matchers.equalTo(expectedErrorMessage)));
+
+        Mockito.verify(getGenreByIdUseCase).execute(expectedId.getValue());
     }
 }
