@@ -2,6 +2,7 @@ package com.fullcycle.admin.catalogo.infrastructure.api.controllers;
 
 import com.fullcycle.admin.catalogo.application.genre.create.CreateGenreCommand;
 import com.fullcycle.admin.catalogo.application.genre.create.CreateGenreUseCase;
+import com.fullcycle.admin.catalogo.application.genre.delete.DeleteGenreUseCase;
 import com.fullcycle.admin.catalogo.application.genre.retrieve.get.GetGenreByIdUseCase;
 import com.fullcycle.admin.catalogo.application.genre.update.UpdateGenreCommand;
 import com.fullcycle.admin.catalogo.application.genre.update.UpdateGenreUseCase;
@@ -24,14 +25,18 @@ public class GenreController implements GenreApi {
     private final CreateGenreUseCase createGenreUseCase;
     private final GetGenreByIdUseCase getGenreByIdUseCase;
     private final UpdateGenreUseCase updateGenreUseCase;
+    private final DeleteGenreUseCase deleteGenreUseCase;
 
     public GenreController(
             final CreateGenreUseCase createGenreUseCase,
-            final GetGenreByIdUseCase getGenreByIdUseCase, UpdateGenreUseCase updateGenreUseCase
+            final GetGenreByIdUseCase getGenreByIdUseCase,
+            final UpdateGenreUseCase updateGenreUseCase,
+            final DeleteGenreUseCase deleteGenreUseCase
     ) {
         this.createGenreUseCase = Objects.requireNonNull(createGenreUseCase);
         this.getGenreByIdUseCase = Objects.requireNonNull(getGenreByIdUseCase);
         this.updateGenreUseCase = Objects.requireNonNull(updateGenreUseCase);
+        this.deleteGenreUseCase = Objects.requireNonNull(deleteGenreUseCase);
     }
 
     @Override
@@ -78,6 +83,6 @@ public class GenreController implements GenreApi {
 
     @Override
     public void deleteById(final String id) {
-
+        this.deleteGenreUseCase.execute(id);
     }
 }
