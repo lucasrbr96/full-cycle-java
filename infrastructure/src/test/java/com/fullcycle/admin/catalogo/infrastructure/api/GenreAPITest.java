@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fullcycle.admin.catalogo.ControllerTest;
 import com.fullcycle.admin.catalogo.application.genre.create.CreateGenreOutput;
 import com.fullcycle.admin.catalogo.application.genre.create.CreateGenreUseCase;
+import com.fullcycle.admin.catalogo.application.genre.delete.DeleteGenreUseCase;
 import com.fullcycle.admin.catalogo.application.genre.retrieve.get.GenreOutput;
 import com.fullcycle.admin.catalogo.application.genre.retrieve.get.GetGenreByIdUseCase;
 import com.fullcycle.admin.catalogo.application.genre.update.UpdateGenreOutput;
@@ -49,6 +50,9 @@ public class GenreAPITest {
 
     @MockBean
     private UpdateGenreUseCase updateGenreUseCase;
+
+    @MockBean
+    private DeleteGenreUseCase deleteGenreUseCase;
 
     @Test
     public void givenAValidCommand_whenCallsCreateGere_shouldReturnGenreId() throws Exception {
@@ -251,5 +255,20 @@ public class GenreAPITest {
                         && Objects.equals(expectedCategories, cmd.categories())
                         && Objects.equals(expectedIsActive, cmd.isActive())
         ));
+    }
+
+    @Test
+    public void givenAValidId_whenCallsDeleteGenre_shouldReturnBeOK() throws Exception {
+        //given
+        final var expectedId = "123";
+        Mockito.doNothing().when(deleteGenreUseCase).execute(Mockito.any());
+
+        final var aRequest = MockMvcRequestBuilders.delete("/genres/{id}", expectedId)
+                .accept(MediaType.APPLICATION_JSON_VALUE);
+
+        final var result = this.mvc.perform(aRequest);
+        result.andExpect(MockMvcResultMatchers.status().isNoContent());
+
+        Mockito.verify(deleteGenreUseCase).execute(Mockito.eq(expectedId));
     }
 }
