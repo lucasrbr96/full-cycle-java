@@ -2,6 +2,7 @@ package com.fullcycle.admin.catalogo.e2e.category;
 
 import com.fullcycle.admin.catalogo.E2ETest;
 import com.fullcycle.admin.catalogo.domain.category.CategoryID;
+import com.fullcycle.admin.catalogo.e2e.MockDsl;
 import com.fullcycle.admin.catalogo.infrastructure.category.models.CategoryResponse;
 import com.fullcycle.admin.catalogo.infrastructure.category.models.CreateCategoryRequest;
 import com.fullcycle.admin.catalogo.infrastructure.category.models.UpdateCategoryRequest;
@@ -28,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @E2ETest
 @Testcontainers
-public class CategoryE2ETest {
+public class CategoryE2ETest implements MockDsl {
 
     @Autowired
     private MockMvc mvc;
@@ -51,6 +52,11 @@ public class CategoryE2ETest {
         System.setProperty("spring.datasource.url", MY_SQL_CONTAINER.getJdbcUrl());
         System.setProperty("spring.datasource.username", MY_SQL_CONTAINER.getUsername());
         System.setProperty("spring.datasource.password", MY_SQL_CONTAINER.getPassword());
+    }
+
+    @Override
+    public MockMvc mvc() {
+        return this.mvc;
     }
 
     @Test
@@ -334,20 +340,5 @@ public class CategoryE2ETest {
                 .andReturn()
                 .getResponse().getContentAsString();
         return this.mvc.perform(aRequest);
-    }
-
-    private CategoryID givenACategory(final String aName, final String aDescription, final boolean isActive) throws Exception {
-        final var requestBody = new CreateCategoryRequest(aName, aDescription, isActive);
-        final var aRequest = MockMvcRequestBuilders.post("/categories")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(Json.writeValueAsString(requestBody));
-
-        final var actualId = this.mvc.perform(aRequest)
-                .andExpect(status().isCreated())
-                .andReturn()
-                .getResponse().getHeader("Location")
-                .replace("/categories/", "");
-
-        return CategoryID.from(actualId);
     }
 }
