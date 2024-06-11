@@ -64,7 +64,7 @@ public class CategoryE2ETest implements MockDsl {
         final var actualId = 
                 givenACategory(expectedName, expectedDescription, expectedIsActive);
         
-        final var actualCategory = retrieveACategory(actualId);
+        final var actualCategory = retrieve(actualId);
 
         Assertions.assertEquals(expectedName, actualCategory.name());
         Assertions.assertEquals(expectedDescription, actualCategory.description());
@@ -170,7 +170,7 @@ public class CategoryE2ETest implements MockDsl {
         final var actualId =
                 givenACategory(expectedName, expectedDescription, expectedIsActive);
 
-        final var actualCategory = retrieveACategory(actualId);
+        final var actualCategory = retrieve(actualId);
 
         Assertions.assertEquals(expectedName, actualCategory.name());
         Assertions.assertEquals(expectedDescription, actualCategory.description());

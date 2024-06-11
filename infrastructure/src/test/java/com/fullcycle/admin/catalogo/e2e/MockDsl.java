@@ -8,6 +8,7 @@ import com.fullcycle.admin.catalogo.infrastructure.category.models.CreateCategor
 import com.fullcycle.admin.catalogo.infrastructure.category.models.UpdateCategoryRequest;
 import com.fullcycle.admin.catalogo.infrastructure.configuration.json.Json;
 import com.fullcycle.admin.catalogo.infrastructure.genre.models.CreateGenreRequest;
+import com.fullcycle.admin.catalogo.infrastructure.genre.models.GenreResponse;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -34,8 +35,8 @@ public interface MockDsl {
         return CategoryID.from(actualId);
     }
 
-    default CategoryResponse retrieveACategory(final Identifier anId) throws Exception {
-        return this.retrieveACategory("/categories/", anId, CategoryResponse.class);
+    default CategoryResponse retrieve(final Identifier anId) throws Exception {
+        return this.retrieve("/categories/", anId, CategoryResponse.class);
     }
 
     default ResultActions updateACategory(final Identifier anId, final UpdateCategoryRequest aRequest) throws Exception {
@@ -84,7 +85,11 @@ public interface MockDsl {
         return this.list("/genres", page, perPage, search, sort, directions);
     }
 
-    private <A, D> List<D> mapTo(final List<A> actual, final Function<A, D> mapper){
+    default GenreResponse retrieveAGenre(final Identifier anId) throws Exception {
+        return this.retrieve("/genres/", anId, GenreResponse.class);
+    }
+
+    default  <A, D> List<D> mapTo(final List<A> actual, final Function<A, D> mapper){
         return actual.stream().map(mapper).toList();
     }
 
@@ -111,9 +116,10 @@ public interface MockDsl {
         return this.mvc().perform(aRequest).andExpect(status().isNoContent());
     }
 
-    private  <T> T retrieveACategory(final String url, final Identifier anId, final Class<T> clazz) throws Exception {
+    private  <T> T retrieve(final String url, final Identifier anId, final Class<T> clazz) throws Exception {
         final var aRequest = get(url + anId.getValue())
-                .contentType(MediaType.APPLICATION_JSON);
+                .accept(MediaType.APPLICATION_JSON_UTF8)
+                .contentType(MediaType.APPLICATION_JSON_UTF8);
         final var json = this.mvc().perform(aRequest)
                 .andExpect(status().isOk())
                 .andReturn()
