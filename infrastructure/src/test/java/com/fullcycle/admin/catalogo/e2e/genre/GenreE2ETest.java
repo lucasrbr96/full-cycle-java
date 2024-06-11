@@ -4,6 +4,7 @@ import com.fullcycle.admin.catalogo.E2ETest;
 import com.fullcycle.admin.catalogo.domain.category.CategoryID;
 import com.fullcycle.admin.catalogo.e2e.MockDsl;
 import com.fullcycle.admin.catalogo.infrastructure.genre.persistence.GenreRepository;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,9 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.List;
+
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @E2ETest
 @Testcontainers
@@ -95,5 +99,86 @@ public class GenreE2ETest implements MockDsl {
         Assertions.assertNotNull(actualGenre.getCreatedAt());
         Assertions.assertNotNull(actualGenre.getUpdatedAt());
         Assertions.assertNull(actualGenre.getDeletedAt());
+    }
+
+    @Test
+    public void asACatalogAdminIShouldBeAbleToNavigateThruAllGenres() throws Exception {
+        Assertions.assertTrue(MY_SQL_CONTAINER.isRunning());
+        Assertions.assertEquals(0, genreRepository.count());
+
+        givenAGenre("Ação", true, List.of());
+        givenAGenre("Esportes", true, List.of());
+        givenAGenre("Drama", true, List.of());
+
+        listGenres(0, 1)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.current_page", Matchers.equalTo(0)))
+                .andExpect(jsonPath("$.per_page", Matchers.equalTo(1)))
+                .andExpect(jsonPath("$.total", Matchers.equalTo(3)))
+                .andExpect(jsonPath("$.items", Matchers.hasSize(1)))
+                .andExpect(jsonPath("$.items[0].name", Matchers.equalTo("Ação")));
+
+        listGenres(1, 1)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.current_page", Matchers.equalTo(1)))
+                .andExpect(jsonPath("$.per_page", Matchers.equalTo(1)))
+                .andExpect(jsonPath("$.total", Matchers.equalTo(3)))
+                .andExpect(jsonPath("$.items", Matchers.hasSize(1)))
+                .andExpect(jsonPath("$.items[0].name", Matchers.equalTo("Drama")));
+
+        listGenres(2, 1)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.current_page", Matchers.equalTo(2)))
+                .andExpect(jsonPath("$.per_page", Matchers.equalTo(1)))
+                .andExpect(jsonPath("$.total", Matchers.equalTo(3)))
+                .andExpect(jsonPath("$.items", Matchers.hasSize(1)))
+                .andExpect(jsonPath("$.items[0].name", Matchers.equalTo("Esportes")));
+
+        listGenres(3, 1)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.current_page", Matchers.equalTo(3)))
+                .andExpect(jsonPath("$.per_page", Matchers.equalTo(1)))
+                .andExpect(jsonPath("$.total", Matchers.equalTo(3)))
+                .andExpect(jsonPath("$.items", Matchers.hasSize(0)));
+    }
+
+    @Test
+    public void asACatalogAdminIShouldBeAbleToSearchBetweenAllGenres() throws Exception {
+        Assertions.assertTrue(MY_SQL_CONTAINER.isRunning());
+        Assertions.assertEquals(0, genreRepository.count());
+
+        givenAGenre("Ação", true, List.of());
+        givenAGenre("Esportes", true, List.of());
+        givenAGenre("Drama", true, List.of());
+
+        listGenres(0,1, "dra")
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.current_page", Matchers.equalTo(0)))
+                .andExpect(jsonPath("$.per_page", Matchers.equalTo(1)))
+                .andExpect(jsonPath("$.total", Matchers.equalTo(1)))
+                .andExpect(jsonPath("$.items", Matchers.hasSize(1)))
+                .andExpect(jsonPath("$.items[0].name", Matchers.equalTo("Drama")));
+
+    }
+
+    @Test
+    public void asACatalogAdminIShouldBeAbleToSortAllGenresByNameDesc() throws Exception {
+        Assertions.assertTrue(MY_SQL_CONTAINER.isRunning());
+        Assertions.assertEquals(0, genreRepository.count());
+
+        givenAGenre("Ação", true, List.of());
+        givenAGenre("Esportes", true, List.of());
+        givenAGenre("Drama", true, List.of());
+
+        listGenres(0,3, "", "name", "desc")
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.current_page", Matchers.equalTo(0)))
+                .andExpect(jsonPath("$.per_page", Matchers.equalTo(3)))
+                .andExpect(jsonPath("$.total", Matchers.equalTo(3)))
+                .andExpect(jsonPath("$.items", Matchers.hasSize(3)))
+                .andExpect(jsonPath("$.items[0].name", Matchers.equalTo("Esportes")))
+                .andExpect(jsonPath("$.items[1].name", Matchers.equalTo("Drama")))
+                .andExpect(jsonPath("$.items[2].name", Matchers.equalTo("Ação")));
+
     }
 }
