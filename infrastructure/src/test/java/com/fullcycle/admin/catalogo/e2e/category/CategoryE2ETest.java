@@ -196,11 +196,9 @@ public class CategoryE2ETest implements MockDsl {
     @Test
     public void asCatalogAdminIShouldBeAbleToUpdateACategoryByItsIdentifier() throws Exception {
         Assertions.assertTrue(MY_SQL_CONTAINER.isRunning());
-
         Assertions.assertEquals(0, categoryRepository.count());
 
-        final var actualId =
-                givenACategory("Movies", null, true);
+        final var actualId = givenACategory("Movies", null, true);
 
         final var expectedName = "filmes";
         final var expectedDescription = "A categoria mais assistida";
