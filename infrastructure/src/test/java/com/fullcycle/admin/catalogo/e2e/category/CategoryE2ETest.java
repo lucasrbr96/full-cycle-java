@@ -1,6 +1,7 @@
 package com.fullcycle.admin.catalogo.e2e.category;
 
 import com.fullcycle.admin.catalogo.E2ETest;
+import com.fullcycle.admin.catalogo.domain.category.CategoryID;
 import com.fullcycle.admin.catalogo.e2e.MockDsl;
 import com.fullcycle.admin.catalogo.infrastructure.category.models.UpdateCategoryRequest;
 import com.fullcycle.admin.catalogo.infrastructure.category.persistence.CategoryRepository;
@@ -285,6 +286,18 @@ public class CategoryE2ETest implements MockDsl {
                 .andExpect(status().isNoContent());
 
         Assertions.assertFalse(this.categoryRepository.existsById(actualId.getValue()));
+    }
+
+    @Test
+    public void asCatalogAdminIShouldNotSeeAErrorByDeletingNotExistentCategory() throws Exception {
+        Assertions.assertTrue(MY_SQL_CONTAINER.isRunning());
+        Assertions.assertEquals(0, categoryRepository.count());
+
+
+        deleteACategory(CategoryID.from("12313"))
+                .andExpect(status().isNoContent());
+
+        Assertions.assertEquals(0, this.categoryRepository.count());
     }
 
 }
