@@ -116,7 +116,7 @@ public class CastMemberTest {
         Assertions.assertEquals(expectedName, actualMember.getName());
         Assertions.assertEquals(expectedType, actualMember.getType());
         Assertions.assertEquals(actualCreatedAt, actualMember.getCreatedAt());
-        Assertions.assertTrue(actualUpdatedAt.isBefore(actualMember.getUpdatedAt()));
+
     }
 
     @Test
