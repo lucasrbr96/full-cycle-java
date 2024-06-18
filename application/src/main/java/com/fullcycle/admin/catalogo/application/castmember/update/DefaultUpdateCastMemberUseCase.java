@@ -11,7 +11,7 @@ import com.fullcycle.admin.catalogo.domain.validation.handler.Notification;
 import java.util.Objects;
 import java.util.function.Supplier;
 
-public non-sealed class DefaultUpdateCastMemberUseCase extends UpdateCastMemberUseCase {
+public final class DefaultUpdateCastMemberUseCase extends UpdateCastMemberUseCase {
 
     private final CastMemberGateway castMemberGateway;
 
