@@ -174,7 +174,7 @@ public class CastMemberMySQLGatewayTest {
         Assertions.assertTrue(actualMember.isEmpty());
     }
 
-    Test
+    @Test
     public void givenEmptyCastMembers_whenCallsFindAll_shouldReturnEmpty() {
         // given
         final var expectedPage = 0;
@@ -270,9 +270,9 @@ public class CastMemberMySQLGatewayTest {
 
     @ParameterizedTest
     @CsvSource({
-            "0,2,5,2,Jason Momoa;Kit Harington",
-            "1,2,5,2,Martin Scorsese;Quentin Tarantino",
-            "2,2,5,1,Vin Diesel",
+            "0,2,2,5,Jason Momoa;Kit Harington",
+            "1,2,2,5,Martin Scorsese;Quentin Tarantino",
+            "2,2,1,5,Vin Diesel",
     })
     public void givenAValidPagination_whenCallsFindAll_shouldReturnPaginated(
             final int expectedPage,
@@ -308,12 +308,10 @@ public class CastMemberMySQLGatewayTest {
     }
 
     private void mockMembers() {
-        castMemberRepository.saveAllAndFlush(List.of(
-                CastMemberJpaEntity.from(CastMember.newMember("Kit Harington", CastMemberType.ACTOR)),
-                CastMemberJpaEntity.from(CastMember.newMember("Vin Diesel", CastMemberType.ACTOR)),
-                CastMemberJpaEntity.from(CastMember.newMember("Quentin Tarantino", CastMemberType.DIRECTOR)),
-                CastMemberJpaEntity.from(CastMember.newMember("Jason Momoa", CastMemberType.ACTOR)),
-                CastMemberJpaEntity.from(CastMember.newMember("Martin Scorsese", CastMemberType.DIRECTOR))
-        ));
+        castMemberRepository.saveAndFlush(CastMemberJpaEntity.from(CastMember.newMember("Kit Harington", CastMemberType.ACTOR)));
+        castMemberRepository.saveAndFlush(CastMemberJpaEntity.from(CastMember.newMember("Vin Diesel", CastMemberType.ACTOR)));
+        castMemberRepository.saveAndFlush(CastMemberJpaEntity.from(CastMember.newMember("Quentin Tarantino", CastMemberType.DIRECTOR)));
+        castMemberRepository.saveAndFlush(CastMemberJpaEntity.from(CastMember.newMember("Jason Momoa", CastMemberType.ACTOR)));
+        castMemberRepository.saveAndFlush(CastMemberJpaEntity.from(CastMember.newMember("Martin Scorsese", CastMemberType.DIRECTOR)));
     }
 }
