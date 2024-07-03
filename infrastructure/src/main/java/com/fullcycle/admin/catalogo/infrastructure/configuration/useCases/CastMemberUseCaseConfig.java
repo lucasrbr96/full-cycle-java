@@ -1,4 +1,4 @@
-package com.fullcycle.admin.catalogo.infrastructure.configuration.usecases;
+package com.fullcycle.admin.catalogo.infrastructure.configuration.useCases;
 
 import com.fullcycle.admin.catalogo.application.castmember.create.CreateCastMemberUseCase;
 import com.fullcycle.admin.catalogo.application.castmember.create.DefaultCreateCastMemberUseCase;
