@@ -1,14 +1,14 @@
 package com.fullcycle.admin.catalogo.domain.category;
 
 
-import com.fullcycle.admin.catalogo.domain.AggregationRoot;
+import com.fullcycle.admin.catalogo.domain.AggregateRoot;
 import com.fullcycle.admin.catalogo.domain.validation.ValidationHandler;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 
-public class Category extends AggregationRoot<CategoryID> implements Cloneable {
+public class Category extends AggregateRoot<CategoryID> implements Cloneable {
 
     private String name;
     private String description;

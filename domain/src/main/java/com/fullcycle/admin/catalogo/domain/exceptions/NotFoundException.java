@@ -1,6 +1,6 @@
 package com.fullcycle.admin.catalogo.domain.exceptions;
 
-import com.fullcycle.admin.catalogo.domain.AggregationRoot;
+import com.fullcycle.admin.catalogo.domain.AggregateRoot;
 import com.fullcycle.admin.catalogo.domain.Identifier;
 import com.fullcycle.admin.catalogo.domain.validation.Error;
 
@@ -14,7 +14,7 @@ public class  NotFoundException extends DomainException {
     }
 
     public static NotFoundException with(
-            final Class<? extends AggregationRoot<?>> anAggregate,
+            final Class<? extends AggregateRoot<?>> anAggregate,
             final Identifier id
     ) {
         final var anError = "%s with ID %s was not found".formatted(

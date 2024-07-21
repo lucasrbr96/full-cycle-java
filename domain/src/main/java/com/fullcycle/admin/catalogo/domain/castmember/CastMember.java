@@ -1,6 +1,6 @@
 package com.fullcycle.admin.catalogo.domain.castmember;
 
-import com.fullcycle.admin.catalogo.domain.AggregationRoot;
+import com.fullcycle.admin.catalogo.domain.AggregateRoot;
 import com.fullcycle.admin.catalogo.domain.exceptions.NotificationException;
 import com.fullcycle.admin.catalogo.domain.utils.InstantUtils;
 import com.fullcycle.admin.catalogo.domain.validation.ValidationHandler;
@@ -8,7 +8,7 @@ import com.fullcycle.admin.catalogo.domain.validation.handler.Notification;
 
 import java.time.Instant;
 
-public class CastMember extends AggregationRoot<CastMemberID> {
+public class CastMember extends AggregateRoot<CastMemberID> {
 
     private String name;
     private CastMemberType type;

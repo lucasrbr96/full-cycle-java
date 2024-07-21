@@ -261,9 +261,4 @@ public class CreateGenreUseCaseTest extends UseCaseTest {
         Mockito.verify(categoryGateway, Mockito.times(1)).existsByIds(any());
         Mockito.verify(genreGateway, Mockito.times(0)).create(any());
     }
-
-    private List<String> asString(final List<CategoryID> categories){
-        return categories.stream()
-                .map(CategoryID::getValue).toList();
-    }
 }

@@ -252,8 +252,4 @@ public class UpdateGenreUseCaseTest extends UseCaseTest {
         ));
 
     }
-
-    private List<String> asString(List<CategoryID> ids){
-        return ids.stream().map(CategoryID::getValue).toList();
-    }
 }

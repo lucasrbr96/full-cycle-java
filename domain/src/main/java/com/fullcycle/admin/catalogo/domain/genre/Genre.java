@@ -1,7 +1,6 @@
 package com.fullcycle.admin.catalogo.domain.genre;
 
-import com.fullcycle.admin.catalogo.domain.AggregationRoot;
-import com.fullcycle.admin.catalogo.domain.category.Category;
+import com.fullcycle.admin.catalogo.domain.AggregateRoot;
 import com.fullcycle.admin.catalogo.domain.category.CategoryID;
 import com.fullcycle.admin.catalogo.domain.exceptions.NotificationException;
 import com.fullcycle.admin.catalogo.domain.utils.InstantUtils;
@@ -13,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class Genre extends AggregationRoot<GenreID> {
+public class Genre extends AggregateRoot<GenreID> {
 
     private String name;
     private boolean active;
